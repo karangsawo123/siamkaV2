@@ -4,12 +4,12 @@
 Sistem manajemen aset kampus berbasis web untuk mengelola peminjaman, maintenance, dan tracking aset.
 
 ## 👥 Tim Pengembang
-- **Scrum Master:** [Nama]
-- **Product Owner 1 (UI/UX):** [Nama]
-- **Product Owner 2 (Business):** [Nama]
-- **Developer 1 (Auth & Users):** [Nama]
-- **Developer 2 (Assets):** [Nama]
-- **Developer 3 (Transactions):** [Nama]
+- **Scrum Master:** [Yoga]
+- **Product Owner 1 (UI/UX):** [Qubba]
+- **Product Owner 2 (Business):** [Salwa]
+- **Developer 1 (Auth & Users):** [Rendy]
+- **Developer 2 (Assets):** [Alif]
+- **Developer 3 (Transactions):** [Dicky]
 
 ## 🛠️ Technology Stack
 - **Frontend:** HTML5, CSS3, JavaScript
@@ -35,10 +35,8 @@ Sistem manajemen aset kampus berbasis web untuk mengelola peminjaman, maintenanc
 
 ### Langkah Instalasi
 1. Clone/Download project ke `htdocs/`
-2. Import database dari `database/siamka_empty.sql`
-3. Copy `config/database.example.php` ke `config/database.php`
-4. Edit `config/database.php` dengan kredensial database Anda
-5. Buka browser: `http://localhost/SIAMKA`
+2. Import database dari `database/siamka.sql`
+3. Buka browser: `http://localhost/SIAMKA`
 
 ### Default Login
 - **Admin:** admin@kampus.ac.id / admin123
@@ -60,8 +58,8 @@ SIAMKA/
 MIT License - Free for educational purposes
 
 ## 📧 Kontak
-- Email: [team.email@example.com]
-- GitHub: [repository-url]
+- Email: [siamka_Team@yahoo.com]
+- GitHub: [https://github.com/karangsawo123/siamkaV2.git]
 
 ---
-Developed with ❤️ by [Team Name]
+Developed with ❤️ by [Siamka Team]
