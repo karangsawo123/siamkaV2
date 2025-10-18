@@ -10,7 +10,7 @@ if (!defined("SECURE")) {
     <footer class="main-footer">
         <div class="footer-content">
             <p>&copy; <?= date("Y") ?> <?= SITE_NAME ?> - All Rights Reserved</p>
-            <p>Developed by [Your Team Name]</p>
+            <p>Developed by [SIAMKA'S TEAM]</p>
         </div>
     </footer>
     
