@@ -16,20 +16,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if (password_verify($password, $user['password'])) {
             // Simpan data user ke session
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['role'] = $user['role'];
-            $_SESSION['nama'] = $user['nama'];
+            $_SESSION['user_id'] = $user['id_user'];
+            $_SESSION['role']    = $user['role'];
+            $_SESSION['nama']    = $user['nama'];
 
             redirect('../../modules/dashboard/index.php');
+            exit;
         } else {
-            $message = "<p class='error'>⚠️ Password salah.</p>";
+            $message = "<div class='alert error'>⚠️ Password salah.</div>";
         }
     } else {
-        $message = "<p class='error'>⚠️ Email tidak ditemukan atau akun tidak aktif.</p>";
+        $message = "<div class='alert error'>⚠️ Email tidak ditemukan atau akun tidak aktif.</div>";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -38,21 +38,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="../../assets/css/auth.css">
 </head>
 <body>
-    <form method="POST">
-        <h2>Login SIAMKA</h2>
-        <?= $message ?>
-        <label>Email</label>
-        <input type="email" name="email" placeholder="Masukkan email" required>
+    <div class="overlay"></div>
+    <div class="login-container">
+        <img src="../../assets/images/icons/logo.png" alt="Logo SIAMKA">
+        <h1>SIAMKA</h1>
+        <p>Sistem Aset Manajemen Kampus</p>
 
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Masukkan password" required>
+        <form method="POST">
+            <?= $message ?>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Masuk</button>
+        </form>
 
-        <button type="submit">Login</button>
-
-        <p style="text-align:center; margin-top:10px;">
-            Belum punya akun? 
-            <a href="register.php">Daftar di sini</a>
+        <p style="text-align:center; margin-top:15px;">
+            Belum punya akun?
+            <a href="register.php" style="color:#007bff; text-decoration:none; font-weight:500;">
+                Klik di sini untuk mendaftar
+            </a>
         </p>
-    </form>
+
+        <div class="footer">
+            <p>© 2025 SIAMKA – Universitas Hogwarts</p>
+        </div>
+    </div>
 </body>
 </html>

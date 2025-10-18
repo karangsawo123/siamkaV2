@@ -1,71 +1,71 @@
 <?php
+session_start();
+include '../../config/database.php';
+include '../../includes/functions.php';
 
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../../includes/functions.php';
+$message = '';
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $nama     = mysqli_real_escape_string($conn, $_POST['nama']);
+    $email    = mysqli_real_escape_string($conn, $_POST['email']);
+    $no_telp  = mysqli_real_escape_string($conn, $_POST['no_telp']);
+    $password = $_POST['password'];
 
-$message = "";
+    // Role default untuk pendaftar baru
+    $role = 'pengguna';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nama = trim($_POST['nama']);
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
-    $no_telp = trim($_POST['telepon']);
-    $role = 'pengguna'; // 🔒 otomatis jadi pengguna
-
-    if (empty($nama) || empty($email) || empty($password) || empty($no_telp)) {
-        $message = "<div class='error'>Semua field wajib diisi!</div>";
+    // Cek apakah email sudah terdaftar
+    $check = $conn->query("SELECT * FROM users WHERE email='$email'");
+    if ($check->num_rows > 0) {
+        $message = "<div class='alert error'>⚠️ Email sudah terdaftar!</div>";
     } else {
-        // cek email sudah ada atau belum
-        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $sql = "INSERT INTO users (nama, email, no_telp, password, role, status) 
+                VALUES ('$nama', '$email', '$no_telp', '$hashedPassword', '$role', 'aktif')";
 
-        if ($result->num_rows > 0) {
-            $message = "<div class='error'>Email sudah terdaftar!</div>";
+        if ($conn->query($sql)) {
+            $message = "<div class='alert success'>✅ Registrasi berhasil! Silakan login.</div>";
+            header("refresh:2; url=login.php");
         } else {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-            $stmt = $conn->prepare("INSERT INTO users (nama, email, password, no_telp, role) VALUES (?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssss", $nama, $email, $hashedPassword, $no_telp, $role);
-
-            if ($stmt->execute()) {
-                $message = "<div class='success'>Registrasi berhasil! Silakan <a href='login.php'>login</a>.</div>";
-            } else {
-                $message = "<div class='error'>Terjadi kesalahan: " . $stmt->error . "</div>";
-            }
+            $message = "<div class='alert error'>❌ Gagal menyimpan data.</div>";
         }
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Register - SIAMKA</title>
+    <title>Daftar - SIAMKA</title>
     <link rel="stylesheet" href="../../assets/css/auth.css">
 </head>
 <body>
-    <form method="POST" action="">
-        <h2>Registrasi Pengguna</h2>
-        <?= $message ?>
-        <label>Nama Lengkap</label>
-        <input type="text" name="nama" placeholder="Masukkan nama lengkap" required>
+    <div class="overlay"></div>
+    <div class="login-container">
+        <img src="../../assets/images/icons/logo.png" alt="Logo SIAMKA">
+        <h1>Registrasi Akun</h1>
+        <p>Buat akun baru SIAMKA</p>
 
-        <label>Email</label>
-        <input type="email" name="email" placeholder="Masukkan email" required>
+        <form method="POST">
+            <?= $message ?>
+            <input type="text" name="nama" placeholder="Nama Lengkap" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="no_telp" placeholder="Nomor Telepon" required>
+            <input type="password" name="password" placeholder="Password" required>
 
-        <label>No. Telepon</label>
-        <input type="text" name="telepon" placeholder="Masukkan no telepon" required>
+            <button type="submit">Daftar</button>
+        </form>
 
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Masukkan password" required>
+        <p style="text-align:center; margin-top:15px;">
+            Sudah punya akun?
+            <a href="login.php" style="color:#007bff; text-decoration:none; font-weight:500;">
+                Klik di sini untuk login
+            </a>
+        </p>
 
-        <input type="hidden" name="role" value="pengguna">
-
-        <input type="submit" value="Daftar">
-    </form>
+        <div class="footer">
+            <p>© 2025 SIAMKA – Universitas Hogwarts</p>
+        </div>
+    </div>
 </body>
 </html>

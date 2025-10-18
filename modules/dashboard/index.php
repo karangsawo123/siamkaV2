@@ -1,9 +1,8 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../auth/login.php");
-    exit;
-}
+include '../../includes/role_check.php';
+
+checkRole(['admin'])
+
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -12,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
     <title>Dashboard</title>
 </head>
 <body>
-    <h1>Selamat Datang di Dashboard, <?= $_SESSION['username']; ?>!</h1>
+    <h1>Selamat Datang, <?= htmlspecialchars($_SESSION['nama']); ?> (<?= htmlspecialchars($_SESSION['role']); ?>)!</h1>
     <p>Halaman ini masih dalam tahap pengembangan (Sprint berikutnya).</p>
     <a href="../auth/logout.php">Logout</a>
 </body>
