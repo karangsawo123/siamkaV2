@@ -4,16 +4,13 @@
  * Include this at the top of protected pages
  */
 
-if (!defined("SECURE")) {
-    define("SECURE", true);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-require_once __DIR__ . "/../config/config.php";
-require_once __DIR__ . "/../config/session.php";
-
-
-if (!isset($_SESSION["user_id"])) {
-    header("Location: " . BASE_URL . "modules/auth/login.php");
+// Kalau belum login, arahkan ke halaman login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../modules/auth/login.php");
     exit;
 }
 ?>

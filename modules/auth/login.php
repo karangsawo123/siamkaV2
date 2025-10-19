@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 include '../../config/database.php';
@@ -20,7 +21,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['role']    = $user['role'];
             $_SESSION['nama']    = $user['nama'];
 
-            redirect('../../modules/dashboard/index.php');
+            // 🚀 Redirect sesuai role
+            if ($user['role'] === 'admin') {
+                header("Location: ../../modules/dashboard/admin.php");
+            } elseif ($user['role'] === 'pengguna') {
+                header("Location: ../../modules/dashboard/pengguna.php");
+            } elseif ($user['role'] === 'manajemen') {
+                header("Location: ../../modules/dashboard/management.php");
+            } else {
+                // Jika role tidak dikenali
+                header("Location: ../../modules/dashboard/index.php");
+            }
             exit;
         } else {
             $message = "<div class='alert error'>⚠️ Password salah.</div>";
@@ -29,6 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $message = "<div class='alert error'>⚠️ Email tidak ditemukan atau akun tidak aktif.</div>";
     }
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="id">
