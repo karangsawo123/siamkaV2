@@ -41,62 +41,99 @@ $query = mysqli_query($conn, "SELECT * FROM users $where ORDER BY id_user DESC L
 ?>
 
 <main class="main-content">
+  <?php if (isset($_SESSION['success_message'])): ?>
+    <div class="alert success">
+      <?= htmlspecialchars($_SESSION['success_message']); ?>
+    </div>
+    <?php unset($_SESSION['success_message']); ?>
+  <?php endif; ?>
 
-<?php
-if (isset($_SESSION['success_message'])) {
-  echo "<div class='alert success'>" . $_SESSION['success_message'] . "</div>";
-  unset($_SESSION['success_message']); // hapus supaya tidak muncul terus
-}
-?>
+  <div class="card">
+    <h1 class="page-title">Manajemen Pengguna</h1>
 
-  <h1>Manajemen Pengguna</h1>
+    <form method="GET" class="filter-form">
+      <input type="text" name="search" placeholder="Cari nama/email..." value="<?= htmlspecialchars($search); ?>">
+      
+      <select name="role">
+        <option value="">Semua Role</option>
+        <option value="admin" <?= $role_filter=='admin'?'selected':''; ?>>Admin</option>
+        <option value="manajemen" <?= $role_filter=='manajemen'?'selected':''; ?>>Manajemen</option>
+        <option value="pengguna" <?= $role_filter=='pengguna'?'selected':''; ?>>Pengguna</option>
+      </select>
 
-  <form method="GET" class="filter-form">
-    <input type="text" name="search" placeholder="Cari nama/email" value="<?= htmlspecialchars($search); ?>">
-    <select name="role">
-      <option value="">Semua Role</option>
-      <option value="admin" <?= $role_filter=='admin'?'selected':''; ?>>Admin</option>
-      <option value="manajemen" <?= $role_filter=='manajemen'?'selected':''; ?>>Manajemen</option>
-      <option value="pengguna" <?= $role_filter=='pengguna'?'selected':''; ?>>Pengguna</option>
-    </select>
-    <button type="submit">Filter</button>
-    <a href="add.php" class="btn-add">+ Tambah User</a>
-  </form>
+      <button type="submit" class="btn btn-secondary">Filter</button>
+      <a href="add.php" class="btn btn-primary">+ Tambah User</a>
+    </form>
 
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>No</th><th>Nama</th><th>Email</th><th>Role</th><th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php
-      $no = $offset + 1;
-      while ($row = mysqli_fetch_assoc($query)): ?>
+    <table class="table-custom">
+      <thead>
         <tr>
-          <td><?= $no++; ?></td>
-          <td><?= htmlspecialchars($row['nama']); ?></td>
-          <td><?= htmlspecialchars($row['email']); ?></td>
-          <td><?= ucfirst($row['role']); ?></td>
-          <td>
-            <a href="edit.php?id_user=<?= $row['id_user']; ?>">Edit</a> |
-            <a href="change_password.php?id_user=<?= $row['id_user']; ?>">Password</a> |
-            <a href="delete.php?id_user=<?= $row['id_user']; ?>" onclick="return confirm('Hapus user ini?')">Hapus</a>
-          </td>
+          <th>No</th>
+          <th>Nama</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Aksi</th>
         </tr>
-      <?php endwhile; ?>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <?php $no = $offset + 1; while ($row = mysqli_fetch_assoc($query)): ?>
+          <tr>
+            <td><?= $no++; ?></td>
+            <td><?= htmlspecialchars($row['nama']); ?></td>
+            <td><?= htmlspecialchars($row['email']); ?></td>
+            <td><?= ucfirst($row['role']); ?></td>
+            <td>
+              <a href="edit.php?id_user=<?= $row['id_user']; ?>" class="btn-action edit">Edit</a> |
+              <button type="button" class="btn-action password" onclick="openPasswordModal(<?= $row['id_user']; ?>)">Password</button> |
+              <a href="delete.php?id_user=<?= $row['id_user']; ?>" onclick="return confirm('Hapus user ini?')" class="btn-action delete">Hapus</a>
+            </td>
 
-  <!-- Pagination -->
-  <div class="pagination">
-    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-      <a href="?page=<?= $i ?>&search=<?= urlencode($search) ?>&role=<?= $role_filter ?>"
-         class="<?= $i == $page ? 'active' : '' ?>">
-         <?= $i ?>
-      </a>
-    <?php endfor; ?>
-  </div>
+          </tr>
+        <?php endwhile; ?>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+        <a href="?page=<?= $i ?>&search=<?= urlencode($search) ?>&role=<?= $role_filter ?>"
+           class="<?= $i == $page ? 'active' : '' ?>">
+           <?= $i ?>
+        </a>
+      <?php endfor; ?>
+    </div>
+  </div>    
 </main>
+
+<!-- Modal Ubah Password -->
+<div id="passwordModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closePasswordModal()">&times;</span>
+    <h2>Ubah Password</h2>
+    <form method="POST" action="change_password.php" class="form-container">
+      <input type="hidden" name="id_user" id="modal_id_user">
+      <div class="form-group">
+        <label>Password Baru</label>
+        <input type="password" name="password" placeholder="Masukkan password baru" required>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <button type="button" class="btn btn-secondary" onclick="closePasswordModal()">Batal</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openPasswordModal(id_user) {
+  document.getElementById('modal_id_user').value = id_user;
+  document.getElementById('passwordModal').style.display = 'flex';
+}
+
+function closePasswordModal() {
+  document.getElementById('passwordModal').style.display = 'none';
+}
+</script>
+
 
 <?php include '../../includes/footer.php'; ?>

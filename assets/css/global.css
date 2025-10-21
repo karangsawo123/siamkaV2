@@ -1,0 +1,197 @@
+/* ===================================== */
+/* 🌍 GLOBAL THEME & BASE STYLES         */
+/* ===================================== */
+
+/* Font dan reset dasar */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  font-family: "Poppins", "Segoe UI", Tahoma, sans-serif;
+  background-color: #f9fafb;
+  color: #222;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* ===================================== */
+/* 🎨 WARNA UTAMA                        */
+/* ===================================== */
+:root {
+  --primary-color: #04224a;   /* Biru tua elegan */
+  --accent-color: #f4c542;    /* Emas */
+  --bg-light: #f9fafb;
+  --text-dark: #1e293b;
+  --text-light: #ffffff;
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ===================================== */
+/* 🧩 ELEMENT DASAR                      */
+/* ===================================== */
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+/* Tombol umum */
+.btn {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--accent-color);
+  color: var(--primary-color);
+  border: none;
+}
+.btn-primary:hover {
+  background: #ffd65a;
+}
+
+.btn-secondary {
+  background: #6b7280;
+  color: #fff;
+  border: none;
+}
+.btn-secondary:hover {
+  background: #4b5563;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+}
+.btn-danger:hover {
+  background: #b02a37;
+}
+
+/* ===================================== */
+/* 🔔 ALERT / NOTIFIKASI                 */
+/* ===================================== */
+.alert {
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.alert.success {
+  background: rgba(52, 211, 153, 0.15);
+  color: #10b981;
+  border: 1px solid #10b981;
+}
+
+.alert.error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+  border: 1px solid #dc2626;
+}
+
+/* ===================================== */
+/* 🧮 FORM ELEMENTS                      */
+/* ===================================== */
+input, select, textarea {
+  font-family: inherit;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95em;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 5px rgba(244, 197, 66, 0.4);
+}
+
+/* ===================================== */
+/* 📊 TABLE STYLING (Global)             */
+/* ===================================== */
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-top: 1rem;
+}
+
+.table-custom th {
+  background: var(--primary-color);
+  color: var(--accent-color);
+  text-align: left;
+  padding: 12px;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.table-custom td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.table-custom tr:hover {
+  background: #f3f4f6;
+}
+
+/* ===================================== */
+/* 🔢 PAGINATION                         */
+/* ===================================== */
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pagination a {
+  display: inline-block;
+  margin: 0 4px;
+  padding: 6px 12px;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.pagination a:hover {
+  background: var(--accent-color);
+  color: var(--primary-color);
+  border-color: var(--accent-color);
+}
+
+.pagination a.active {
+  background: var(--accent-color);
+  color: var(--primary-color);
+  pointer-events: none;
+}
+
+/* ===================================== */
+/* ⚙️ UTILITIES                         */
+/* ===================================== */
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
