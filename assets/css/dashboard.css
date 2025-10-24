@@ -8,9 +8,9 @@
 .main-content {
   position: relative;
   margin-left: 250px; /* sesuai lebar sidebar */
-  margin-top: 60px;   /* tinggi navbar */
+  margin-top: 0px;   /* tinggi navbar */
   padding: 1.5rem 2rem;
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh - 0px);
   background-color: #f5f7fa;
 
   /* Biar selalu proporsional dan konten full */

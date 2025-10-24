@@ -21,8 +21,11 @@ require_once __DIR__ . '/functions.php';
     <!-- Custom Dashboard CSS -->
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/global.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/dashboard.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/responsive.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/assets.css">
+
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
+
+
 
 
     <!-- Tambahan CSS per halaman -->
