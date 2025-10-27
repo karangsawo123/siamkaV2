@@ -54,9 +54,6 @@ SIAMKA/
 └── docs/            # Dokumentasi
 ```
 
-## 📝 License
-MIT License - Free for educational purposes
-
 ## 📧 Kontak
 - Email: [siamka_Team@yahoo.com]
 - GitHub: [https://github.com/karangsawo123/siamkaV2.git]

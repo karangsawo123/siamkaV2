@@ -1,145 +1,118 @@
 <?php
 define("SECURE", true);
+if (session_status() === PHP_SESSION_NONE) session_start();
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-include '../../includes/auth_check.php';
-include '../../includes/role_check.php';
-include '../../includes/notification_helper.php';
-include '../../config/config.php';
-include '../../config/database.php';
-include '../../includes/header.php';
-include '../../includes/sidebar.php';
-
+require_once '../../includes/auth_check.php';
+require_once '../../includes/role_check.php';
+require_once '../../config/config.php';
+require_once '../../config/database.php';
+require_once '../../includes/notification_helper.php';
 checkRole(['admin']);
 
-// Pagination
-$limit = 10;
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$offset = ($page - 1) * $limit;
+$selected_kategori = $_GET['kategori'] ?? '';
 
-// Dropdown filter
-$search = isset($_GET['search']) ? trim($_GET['search']) : '';
-
-// Query kategori
-$where = "";
+// 🔹 Query data kategori + jumlah aset
+$query = "SELECT c.*, COUNT(a.id_aset) AS total_aset
+          FROM categories c
+          LEFT JOIN assets a ON c.id_kategori = a.id_kategori
+          WHERE 1=1";
 $params = [];
-$paramTypes = "";
+$types = '';
 
-if (!empty($search)) {
-    // Jika user pilih kategori tertentu
-    $where = "WHERE c.nama_kategori = ?";
-    $params[] = $search;
-    $paramTypes .= "s";
+if ($selected_kategori !== '') {
+    $query .= " AND c.id_kategori = ?";
+    $params[] = $selected_kategori;
+    $types .= 'i';
 }
 
-$sql = "SELECT c.*, COUNT(a.id_aset) AS total_aset
-        FROM categories c
-        LEFT JOIN assets a ON c.id_kategori = a.id_kategori
-        $where
-        GROUP BY c.id_kategori
-        ORDER BY c.nama_kategori ASC
-        LIMIT ? OFFSET ?";
+$query .= " GROUP BY c.id_kategori ORDER BY c.nama_kategori ASC";
 
-$params[] = $limit;
-$params[] = $offset;
-$paramTypes .= "ii";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param($paramTypes, ...$params);
+$stmt = $conn->prepare($query);
+if (!empty($params)) $stmt->bind_param($types, ...$params);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Hitung total data
-$countSql = "SELECT COUNT(*) AS total FROM categories c " . ($where ? $where : "");
-$countStmt = $conn->prepare($countSql);
-if (!empty($search)) {
-    $countStmt->bind_param("s", $search);
-}
-$countStmt->execute();
-$total = $countStmt->get_result()->fetch_assoc()['total'];
-$total_pages = ceil($total / $limit);
+// 🔹 Data untuk dropdown kategori
+$kategori_result = $conn->query("SELECT id_kategori, nama_kategori FROM categories ORDER BY nama_kategori ASC");
+
+include '../../includes/header.php';
+include '../../includes/sidebar.php';
 ?>
 
-
 <main class="main-content">
-  <?php display_notification(); ?>
-
-  <?php if (isset($_SESSION['success_message'])): ?>
-    <div class="alert success">
-      <?= htmlspecialchars($_SESSION['success_message']); ?>
-    </div>
-    <?php unset($_SESSION['success_message']); ?>
-  <?php endif; ?>
-
-  <div class="card">
-    <h1 class="page-title">Manajemen Kategori Aset</h1>
-
-    <!-- 🔽 Dropdown Filter -->
-    <form method="GET" class="filter-form" style="margin-bottom:15px;">
-  <select name="search" onchange="this.form.submit()">
-    <option value="">Semua Kategori</option>
-    <?php
-    $kategoriResult = $conn->query("SELECT nama_kategori FROM categories ORDER BY nama_kategori ASC");
-    while ($kategori = $kategoriResult->fetch_assoc()):
-        $selected = ($search === $kategori['nama_kategori']) ? 'selected' : '';
-    ?>
-      <option value="<?= htmlspecialchars($kategori['nama_kategori']); ?>" <?= $selected; ?>>
-        <?= htmlspecialchars($kategori['nama_kategori']); ?>
-      </option>
-    <?php endwhile; ?>
-  </select>
-
-  <a href="add.php" class="btn btn-primary">+ Tambah Kategori</a>
-</form>
-
-
-    <!-- 🔹 Tabel Data -->
-    <table class="table-custom">
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Nama Kategori</th>
-          <th>Deskripsi</th>
-          <th>Jumlah Aset</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php if ($result && $result->num_rows > 0): ?>
-          <?php $no = $offset + 1; ?>
-          <?php while ($row = $result->fetch_assoc()): ?>
-            <tr>
-              <td><?= $no++; ?></td>
-              <td><?= htmlspecialchars($row['nama_kategori']); ?></td>
-              <td><?= htmlspecialchars($row['deskripsi']); ?></td>
-              <td><?= $row['total_aset']; ?></td>
-              <td>
-                <a href="edit.php?id=<?= $row['id_kategori']; ?>" class="btn-action edit">Edit</a> |
-                <a href="delete.php?id=<?= $row['id_kategori']; ?>" class="btn-action delete" onclick="return confirm('Hapus kategori ini?')">Hapus</a>
-              </td>
-            </tr>
-          <?php endwhile; ?>
-        <?php else: ?>
-          <tr>
-            <td colspan="5" style="text-align:center;">Tidak ada data kategori.</td>
-          </tr>
-        <?php endif; ?>
-      </tbody>
-    </table>
-
-    <!-- 🔸 Pagination -->
-    <div class="pagination">
-      <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-        <a href="?page=<?= $i ?>&search=<?= urlencode($search) ?>"
-           class="<?= $i == $page ? 'active' : '' ?>">
-           <?= $i ?>
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1 class="page-title"><i class="fa-solid fa-tags me-2"></i>Manajemen Kategori Aset</h1>
+        <a href="add.php" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i> Tambah Kategori
         </a>
-      <?php endfor; ?>
     </div>
-  </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <?php display_notification(); ?>
+
+            <!-- 🔽 Dropdown Filter -->
+            <form method="get" class="mb-3">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Pilih Kategori</label>
+                        <select name="kategori" class="form-select" onchange="this.form.submit()">
+                            <option value="">Semua Kategori</option>
+                            <?php while ($kat = $kategori_result->fetch_assoc()): ?>
+                                <option value="<?= $kat['id_kategori'] ?>" 
+                                    <?= $selected_kategori == $kat['id_kategori'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($kat['nama_kategori']) ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                </div>
+            </form>
+
+            <!-- 🔹 Data Table -->
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Kategori</th>
+                            <th>Deskripsi</th>
+                            <th>Jumlah Aset</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($result->num_rows > 0): ?>
+                            <?php $no = 1; while ($row = $result->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?= $no++ ?></td>
+                                    <td><?= htmlspecialchars($row['nama_kategori']) ?></td>
+                                    <td><?= htmlspecialchars($row['deskripsi']) ?: '-' ?></td>
+                                    <td><span class="badge bg-info"><?= $row['total_aset'] ?></span></td>
+                                    <td class="text-center">
+                                        <a href="edit.php?id=<?= $row['id_kategori'] ?>" class="btn btn-sm btn-warning me-1">
+                                            <i class="fa-solid fa-pen"></i> Edit
+                                        </a>
+                                        <a href="delete.php?id=<?= $row['id_kategori'] ?>" 
+                                           class="btn btn-sm btn-danger"
+                                           onclick="return confirm('Yakin hapus kategori ini?')">
+                                            <i class="fa-solid fa-trash"></i> Hapus
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    <i class="fa-solid fa-circle-info me-1"></i> Tidak ada data kategori.
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </main>
 
 <?php include '../../includes/footer.php'; ?>

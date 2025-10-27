@@ -18,16 +18,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (password_verify($password, $user['password'])) {
             // Simpan data user ke session
             $_SESSION['user_id'] = $user['id_user'];
+            $_SESSION['id_user'] = $user['id_user']; 
             $_SESSION['role']    = $user['role'];
             $_SESSION['nama']    = $user['nama'];
-
+            $_SESSION['foto'] = $user['foto'];
             // 🚀 Redirect sesuai role
             if ($user['role'] === 'admin') {
                 header("Location: ../../modules/dashboard/admin.php");
             } elseif ($user['role'] === 'pengguna') {
                 header("Location: ../../modules/dashboard/pengguna.php");
             } elseif ($user['role'] === 'manajemen') {
-                header("Location: ../../modules/dashboard/management.php");
+                header("Location: ../../modules/dashboard/manajemen.php");
             } else {
                 // Jika role tidak dikenali
                 header("Location: ../../modules/dashboard/index.php");

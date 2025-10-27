@@ -19,12 +19,12 @@ require_once __DIR__ . '/functions.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
     <!-- Custom Dashboard CSS -->
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/global.css">
+
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/dashboard.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/assets.css">
-
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/global.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
-
+    
 
 
 
