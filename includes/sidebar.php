@@ -83,6 +83,12 @@ if ($notif_query) {
                         </span>
                     <?php endif; ?>
                 </a>
+                                <!-- 🔹 Tambahan baru: Loan Reports -->
+                <a href="<?= BASE_URL ?>modules/reports/loans_report.php"
+                    class="nav-link text-white py-2 px-3 rounded mb-1 <?= $current_page == 'loans_report.php' ? 'active bg-primary' : '' ?>">
+                    <i class="fa-solid fa-file-lines me-2"></i> Laporan Peminjaman
+                </a>
+
                 <a href="<?= BASE_URL ?>modules/damage/index.php"
                     class="nav-link text-white py-2 px-3 rounded mb-1 <?= $current_page == 'index.php' && strpos($_SERVER['REQUEST_URI'], '/damage/') !== false ? 'active bg-primary' : '' ?>">
                     <i class="fa-solid fa-wrench me-2"></i> Laporan Kerusakan
@@ -97,6 +103,9 @@ if ($notif_query) {
                     class="nav-link text-white py-2 px-3 rounded mb-1 <?= $current_page == 'summary.php' ? 'active bg-primary' : '' ?>">
                     <i class="fa-solid fa-chart-column me-2"></i> Laporan
                 </a>
+
+
+
 
             <?php elseif ($user_role == "pengguna"): ?>
                 <a href="<?= BASE_URL ?>modules/loans/available.php"
@@ -128,6 +137,11 @@ if ($notif_query) {
                 <a href="<?= BASE_URL ?>modules/reports/summary.php"
                     class="nav-link text-white py-2 px-3 rounded mb-1 <?= $current_page == 'summary.php' ? 'active bg-primary' : '' ?>">
                     <i class="fa-solid fa-chart-pie me-2"></i> Laporan & Statistik
+                </a>
+
+                <a href="<?= BASE_URL ?>modules/reports/loans_report.php"
+                    class="nav-link text-white py-2 px-3 rounded mb-1 <?= $current_page == 'loans_report.php' ? 'active bg-primary' : '' ?>">
+                    <i class="fa-solid fa-file-lines me-2"></i> Laporan Peminjaman
                 </a>
             <?php endif; ?>
 

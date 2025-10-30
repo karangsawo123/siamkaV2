@@ -44,10 +44,17 @@ include '../../includes/sidebar.php';
 
 <main class="main-content">
     <div class="page-header d-flex justify-content-between align-items-center">
-        <h1 class="page-title"><i class="fa-solid fa-users me-2"></i>Manajemen Pengguna</h1>
-        <a href="add.php" class="btn btn-primary">
-            <i class="fa-solid fa-plus"></i> Tambah User
-        </a>
+        <h1 class="page-title">
+            <i class="fa-solid fa-users me-2"></i> Manajemen Pengguna
+        </h1>
+        <div class="d-flex gap-2">
+            <a href="add.php" class="btn btn-primary">
+                <i class="fa-solid fa-plus"></i> Tambah User
+            </a>
+            <a href="deleted_users.php" class="btn btn-danger">
+                <i class="fa-solid fa-user-slash"></i> User Terhapus
+            </a>
+        </div>
     </div>
 
     <div class="card shadow-sm">
@@ -90,7 +97,8 @@ include '../../includes/sidebar.php';
                     </thead>
                     <tbody>
                         <?php if ($result->num_rows > 0): ?>
-                            <?php $no = 1; while ($row = $result->fetch_assoc()): ?>
+                            <?php $no = 1;
+                            while ($row = $result->fetch_assoc()): ?>
                                 <tr>
                                     <td><?= $no++ ?></td>
                                     <td><?= htmlspecialchars($row['nama']) ?></td>
@@ -135,35 +143,36 @@ include '../../includes/sidebar.php';
 
 <!-- Modal Ubah Password -->
 <div id="passwordModal" class="modal">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content p-4">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0"><i class="fa-solid fa-key me-1"></i>Ubah Password</h5>
-        <button type="button" class="btn-close" onclick="closePasswordModal()"></button>
-      </div>
-      <form method="POST" action="change_password.php">
-        <input type="hidden" name="id_user" id="modal_id_user">
-        <div class="mb-3">
-          <label class="form-label">Password Baru</label>
-          <input type="password" name="password" class="form-control" placeholder="Masukkan password baru" required>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0"><i class="fa-solid fa-key me-1"></i>Ubah Password</h5>
+                <button type="button" class="btn-close" onclick="closePasswordModal()"></button>
+            </div>
+            <form method="POST" action="change_password.php">
+                <input type="hidden" name="id_user" id="modal_id_user">
+                <div class="mb-3">
+                    <label class="form-label">Password Baru</label>
+                    <input type="password" name="password" class="form-control" placeholder="Masukkan password baru" required>
+                </div>
+                <div class="text-end">
+                    <button type="button" class="btn btn-secondary me-2" onclick="closePasswordModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
         </div>
-        <div class="text-end">
-          <button type="button" class="btn btn-secondary me-2" onclick="closePasswordModal()">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan</button>
-        </div>
-      </form>
     </div>
-  </div>
 </div>
 
 <script>
-function openPasswordModal(id_user) {
-  document.getElementById('modal_id_user').value = id_user;
-  document.getElementById('passwordModal').style.display = 'flex';
-}
-function closePasswordModal() {
-  document.getElementById('passwordModal').style.display = 'none';
-}
+    function openPasswordModal(id_user) {
+        document.getElementById('modal_id_user').value = id_user;
+        document.getElementById('passwordModal').style.display = 'flex';
+    }
+
+    function closePasswordModal() {
+        document.getElementById('passwordModal').style.display = 'none';
+    }
 </script>
 
 <?php include '../../includes/footer.php'; ?>
