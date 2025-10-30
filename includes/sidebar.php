@@ -83,7 +83,7 @@ if ($notif_query) {
                         </span>
                     <?php endif; ?>
                 </a>
-                                <!-- 🔹 Tambahan baru: Loan Reports -->
+                <!-- 🔹 Tambahan baru: Loan Reports -->
                 <a href="<?= BASE_URL ?>modules/reports/loans_report.php"
                     class="nav-link text-white py-2 px-3 rounded mb-1 <?= $current_page == 'loans_report.php' ? 'active bg-primary' : '' ?>">
                     <i class="fa-solid fa-file-lines me-2"></i> Laporan Peminjaman
@@ -118,11 +118,14 @@ if ($notif_query) {
                     <i class="fa-solid fa-clipboard-check me-2"></i> Peminjaman Saya
                 </a>
 
+                <a href="<?= BASE_URL ?>modules/damage/report.php"
+                    class="nav-link text-white py-2 px-3 rounded mb-1 <?= $current_page == 'report.php' ? 'active bg-primary' : '' ?>">
+                    <i class="fa-solid fa-tools me-2"></i> Laporan
+                </a>
                 <a href="<?= BASE_URL ?>modules/damage/my_reports.php"
                     class="nav-link text-white py-2 px-3 rounded mb-1 <?= $current_page == 'my_reports.php' ? 'active bg-primary' : '' ?>">
-                    <i class="fa-solid fa-tools me-2"></i> Laporan Saya
+                    <i class="fa-solid fa-tools me-2"></i> Riwayat Laporan Saya
                 </a>
-
             <?php elseif ($user_role == "manajemen"): ?>
                 <a href="<?= BASE_URL ?>modules/assets/index.php"
                     class="nav-link text-white py-2 px-3 rounded mb-1 <?= $current_page == 'index.php' && strpos($_SERVER['REQUEST_URI'], '/assets/') !== false ? 'active bg-primary' : '' ?>">
